@@ -1,15 +1,24 @@
-import dotenv
 from flask import Flask, render_template, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_jwt_extended import JWTManager
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Carrega variáveis do .env
+
+SECRET_KEY = os.getenv('SECRET_KEY_ATIVADADE01')
+SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
+JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY_ATIVADADE01')
+
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your_secret_key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
+app.config['JWT_SECRET_KEY'] = JWT_SECRET_KEY
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'
+
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
