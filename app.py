@@ -12,13 +12,11 @@ SECRET_KEY = os.getenv('SECRET_KEY_ATIVADADE01')
 SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY_ATIVADADE01')
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['JWT_SECRET_KEY'] = JWT_SECRET_KEY
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
 
 db = SQLAlchemy(app)
 bcrypt = Bcrypt(app)
@@ -40,7 +38,9 @@ class User(UserMixin, db.Model):
 
 class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(200), nullable=False)
+    title = db.Column(db.String(200), nullable=False)
+    status = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.String(10000), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 @login_manager.user_loader
@@ -94,12 +94,12 @@ def register():
 @login_required
 def tasks():
     if request.method == 'POST':
-        content = request.form.get('content')
-        if not content:
+        title = request.form.get('title')
+        if not title:
             flash('Task content is required')
             return redirect(url_for('tasks'))
 
-        new_task = Task(content=content, owner=current_user)
+        new_task = Task(title=title, description="" ,status="Pending", owner=current_user)
         db.session.add(new_task)
         db.session.commit()
         return redirect(url_for('tasks'))
