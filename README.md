@@ -26,7 +26,7 @@ To deploy this project run
 ```bash
   source venv/bin/activate
 ```
-Next run:
+Next step run:
 ```bash
   pip install -r requirements.txt
 ```
