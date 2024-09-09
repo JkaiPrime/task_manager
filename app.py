@@ -4,6 +4,9 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_jwt_extended import JWTManager
 from dotenv import load_dotenv
+from flask_wtf import FlaskForm
+from wtforms import StringField, TextAreaField, SelectField, SubmitField
+from wtforms.validators import DataRequired, Length
 import os
 
 load_dotenv()  # Carrega variáveis do .env
@@ -42,6 +45,14 @@ class Task(db.Model):
     status = db.Column(db.String(200), nullable=False)
     description = db.Column(db.String(10000), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
+class TaskForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(min=1, max=200)])
+    description = TextAreaField('Description', validators=[DataRequired(), Length(min=1, max=10000)])
+    status = SelectField('Status', choices=[('Pending', 'Pending'), ('In Progress', 'In Progress'), ('Completed', 'Completed')], validators=[DataRequired()])
+    submit = SubmitField('Update Task')
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -106,6 +117,31 @@ def tasks():
 
     user_tasks = Task.query.filter_by(user_id=current_user.id).all()
     return render_template('tasks.html', tasks=user_tasks)
+
+
+@app.route('/edit/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_task(id):
+    task = Task.query.get_or_404(id)
+
+    # Verifica se o usuário atual é o dono da tarefa
+    if task.owner != current_user:
+        flash("You don't have permission to edit this task.")
+        return redirect(url_for('tasks'))
+
+    form = TaskForm(obj=task)  # Preenche o formulário com os dados da tarefa
+
+    if form.validate_on_submit():
+        task.title = form.title.data
+        task.description = form.description.data
+        task.status = form.status.data
+        db.session.commit()
+        flash('Task updated successfully!')
+        return redirect(url_for('tasks'))
+
+    return render_template('edit_task.html', form=form, task=task)
+
+
 
 @app.route('/logout')
 @login_required
