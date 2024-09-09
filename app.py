@@ -51,6 +51,7 @@ class TaskForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=1, max=200)])
     description = TextAreaField('Description', validators=[DataRequired(), Length(min=1, max=10000)])
     status = SelectField('Status', choices=[('Pending', 'Pending'), ('In Progress', 'In Progress'), ('Completed', 'Completed')], validators=[DataRequired()])
+    users = SelectField('Users', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Update Task')
 
 
@@ -124,17 +125,25 @@ def tasks():
 def edit_task(id):
     task = Task.query.get_or_404(id)
 
+
+
     # Verifica se o usuário atual é o dono da tarefa
     if task.owner != current_user:
         flash("You don't have permission to edit this task.")
         return redirect(url_for('tasks'))
+    
+    users = User.query.with_entities(User.id, User.email).all()
+    
 
     form = TaskForm(obj=task)  # Preenche o formulário com os dados da tarefa
+    
+    form.users.choices = [(user.id, user.email) for user in users]
 
     if form.validate_on_submit():
         task.title = form.title.data
         task.description = form.description.data
         task.status = form.status.data
+        task.user_id = form.users.data
         db.session.commit()
         flash('Task updated successfully!')
         return redirect(url_for('tasks'))
