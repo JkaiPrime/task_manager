@@ -1,18 +1,29 @@
+# Atividade01 (TaskManager)
 
-# Atividade01 (TaskManeger)
+TaskManager é um sistema simples de gerenciamento de tarefas, projetado para ajudar na organização e no acompanhamento de atividades.
 
-Um sistema de gerenciamento de tarefas
+## Funcionalidades
 
+- Adição, edição e exclusão de tarefas.
+- Marcação de tarefas como concluídas.
+- Listagem de tarefas pendentes e concluídas.
+- Interface intuitiva e fácil de usar.
 
+## Pré-requisitos
 
-## Authors
+Antes de começar, certifique-se de que você tenha os seguintes softwares instalados:
 
-- [@JkaiPrime](https://github.com/JkaiPrime)
-- [@Renato Leal](https://github.com/Renatoleall)
+- [Python 3.x](https://www.python.org/downloads/)
+- [Git](https://git-scm.com/)
 
+## Instalação
 
-## Deployment
+### 1. Clone o repositório
 
+```bash
+git clone https://github.com/SEU_USUARIO/taskmanager.git
+cd taskmanager
+```
 To deploy this project run
 
 ```bash
