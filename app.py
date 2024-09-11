@@ -151,6 +151,13 @@ def edit_task(id):
     return render_template('edit_task.html', form=form, task=task)
 
 
+@app.route('/all_tasks', methods=['GET'])
+@login_required
+def all_tasks():
+    all_tasks = Task.query.all()  # Pega todas as tarefas
+    return render_template('all_tasks.html', tasks=all_tasks)
+
+
 
 @app.route('/logout')
 @login_required
@@ -169,6 +176,7 @@ def delete_task(id):
     db.session.delete(task)
     db.session.commit()
     return redirect(url_for('tasks'))
+
 
 if __name__ == '__main__':
     with app.app_context():

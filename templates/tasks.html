@@ -11,11 +11,11 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
 
-                <!-- Card de Tarefas -->
+
                 <div class="card shadow p-4">
                     <h1 class="card-title text-center mb-4">Your Tasks</h1>
 
-                    <!-- Formulário para adicionar nova tarefa -->
+
                     <form method="post" class="mb-4">
                         <div class="form-group mb-3">
                             <label for="title">New Task:</label>
@@ -24,8 +24,10 @@
                         <input class="btn btn-outline-secondary btn-block" type="submit" value="Add Task">
                     </form>
 
-                    <!-- Lista de Tarefas -->
+
                     <ul class="list-group mb-3">
+
+
                         {% for task in tasks %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 {{ task.title }}
@@ -46,8 +48,13 @@
                             </div>
                         {% endfor %}
                     </ul>
+                    <div class="d-flex justify-content-center">
 
-                    <p class="text-center"><a href="{{ url_for('logout') }}">Logout</a></p>
+                        <a href="{{ url_for('all_tasks') }}" class="btn btn-primary mx-2">View All Tasks</a>
+                        
+
+                        <a href="{{ url_for('logout') }}" class="btn btn-primary mx-2">Logout</a>
+                    </div>                    
                 </div>
             </div>
         </div>
